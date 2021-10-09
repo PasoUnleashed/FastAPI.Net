@@ -42,8 +42,8 @@ public class Controller1:Controller
             Console.WriteLine("No Identity");
         }
     }
-    [HttpPut] //http://localhost:8080/api/AddPerson/1
-    [Route("./AddPerson/{id}")]
+    [HttpPut] //http://localhost:8080/api/AddPerson
+    [Route("./AddPerson")]
     public void AddPerson(Person p)
     {
         Console.WriteLine($"Adding person with id {p.ID}");
