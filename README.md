@@ -8,14 +8,17 @@ class Program
 {
     static void Main(string[] args)
     {
-        var config = new APIConfig();
-        config.UseHttps(false);
+        // Create configuration
+        var config = new APIConfig().UseHttps(false);             
+        // Create server
         var api = new API(config, "localhost", 8080);
+        // Start the server
         api.Start();
+        // Rest of the appliaction.
         while (true) ;
     }
 }
-[Route("/")]
+[Route("/api")] //http://localhost:8080/api
 public class Controller1:Controller
 {
 
@@ -30,40 +33,35 @@ public class Controller1:Controller
             Console.WriteLine("No Identity");
         }
     }
-    [Route("./a")]
-    public void path()
+    [HttpPut] //http://localhost:8080/api/AddPerson/1
+    [Route("./AddPerson/{id}")]
+    public void AddPerson(Person p)
     {
-        AuthCheck();
+        Console.WriteLine($"Adding person with id {p.ID}");
     }
-    [Route("./people/{id}")]
-    public Person person(int id)
+    [Route("./{id}")] //http://localhost:8080/api/4120
+    public Person GetPerson(int id)
     {
-        AuthCheck();
-        return new Person(id, "aaa", DateTime.Now);
-    }
-    [HttpDelete]
-    public Person delete(Person p)
-    {
-        AuthCheck();
-        return p;
-    }
-    public void g()
-    {
-        AuthCheck();
-        Console.WriteLine("base get in controller1");
+        Console.WriteLine($"Returning person with id {id}");
+        return new Person(id, "somePerson", DateTime.Now);
     }
 }
+/// Our authentication identity class
 public class Auth : FastAPI.Net.Authentication.AuthenticationIdentity
 {
-    public Auth(string pass)
+    // The identity will be created if the request header contains the constructor's parameters.
+    public Auth(string username)
     {
-        Console.WriteLine($"Password:{pass}");
+        Console.WriteLine($"username:{username}");
     }
+    // Everyone get's basic access in this implementation
     public override bool HasMinimalAccess()
     {
-        throw new NotImplementedException();
+        return true;
     }
 }
+
+// Testing data class
 public class Person
 {
     public int ID { get; set; }
