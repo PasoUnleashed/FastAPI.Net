@@ -2,7 +2,7 @@
 <package >
   <metadata>
     <id>$id$</id>
-    <version>1.0.1</version>
+    <version>1.0.2</version>
     <title>$title$</title>
     <authors>Faisal Alsajjan</authors>
     <requireLicenseAcceptance>false</requireLicenseAcceptance>
@@ -12,5 +12,8 @@
     <releaseNotes>First Release.</releaseNotes>
     <copyright>MIT Liscence</copyright>
     <tags>API REST HTTP SERVER</tags>
+    <dependencies>
+	<group targetFramework=".NETFramework4.7.2" />
+    </dependencies>
   </metadata>
 </package>

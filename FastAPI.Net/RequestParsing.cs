@@ -1,6 +1,7 @@
 ﻿using HttpMultipartParser;
 using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Net;
 using System.Text;
@@ -158,7 +159,9 @@ namespace FastAPI.Net
             return ret;
         }
     }
-
+    /// <summary>
+    /// A temporary file that can be saved to the local disk.
+    /// </summary>
     public class FileParameter : IDisposable
     {
         string name;
@@ -234,6 +237,14 @@ namespace FastAPI.Net
                 System.IO.File.Delete(path);
                 Console.WriteLine("file deleted");
             }
+        }
+        /// <summary>
+        /// Get the complete file in binary form.
+        /// </summary>
+        /// <returns>the file in binary</returns>
+        public byte[] GetData()
+        {
+            return File.ReadAllBytes(Path);
         }
     }
 }

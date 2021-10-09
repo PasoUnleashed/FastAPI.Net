@@ -26,9 +26,24 @@ namespace FastAPI.Net
 
         Authentication.AuthenticationIdentity identity;
         IEnumerable<FileParameter> files;
+        /// <summary>
+        /// The authentication identity of the client (if no identity is found) this property will be null
+        /// </summary>
         protected AuthenticationIdentity Identity { get => identity; }
+        /// <summary>
+        /// The original http request
+        /// </summary>
         protected HttpListenerRequest Request { get => request; }
+        /// <summary>
+        /// If the request body is a multipart form, this will contain any files sent by the client.
+        /// </summary>
         protected IEnumerable<FileParameter> Files { get => files; }
+        /// <summary>
+        /// Set the data of the controller after creating an instnace.
+        /// </summary>
+        /// <param name="request">the request</param>
+        /// <param name="auth">auth identity if found (or null)</param>
+        /// <param name="files">the list of files received</param>
         internal void SetData(HttpListenerRequest request, AuthenticationIdentity auth, IEnumerable<FileParameter> files)
         {
             if (this.request == null)
@@ -65,6 +80,7 @@ namespace FastAPI.Net
         public object[] GetArgs(Dictionary<string,string> args)
         {
             var param = method.GetParameters();
+            //try to get parameter from args array
             string getParam(string name)
             {
                 var whr = args.Where((i) => i.Key == name || $"{{{i.Key}}}" == i.Key);
@@ -80,7 +96,7 @@ namespace FastAPI.Net
                 ret[i] = getParam(param[i].Name);
                 if (!param[i].ParameterType.IsValueType)
                 {
-                    if (param.Count((p) => !p.ParameterType.IsValueType) == 1 && ret[i] == "")
+                    if (param.Count((p) => !p.ParameterType.IsValueType) == 1 && ((ret[i].ToString()) == ""))
                     {
                         ret[i] = args["json"];
                     }
@@ -116,7 +132,13 @@ namespace FastAPI.Net
                         }
                         catch { ret[i] = 0; }
                     }
-                    ret[i] = ret[i];
+                    if (param[i].ParameterType == typeof(string))
+                    {
+                        if (ret[i].ToString() == "" && param.Count((j) => j.ParameterType == typeof(string)) == 1 && args.ContainsKey("text") && args["text"] != "") 
+                        {
+                            ret[i] = args["text"];
+                        }
+                    }
                 }
             }
             return ret;

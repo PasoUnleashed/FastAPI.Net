@@ -34,11 +34,17 @@ namespace FastAPI.Net.Authentication
 
 
 
-
+    /// <summary>
+    /// This class parses authentication identities from header. It finds defined identities and tries to match data from the request headers to a defined type
+    /// </summary>
     public class AuthenticationIdentityFactory
     {
         AppDomain domain;
         List<Type> authTypes;
+        /// <summary>
+        /// Initializes the IdentityFactory
+        /// </summary>
+        /// <param name="domain">the domain where the Authentication identity types are defined</param>
         public AuthenticationIdentityFactory(AppDomain domain)
         {
             this.domain = domain;
@@ -53,6 +59,11 @@ namespace FastAPI.Net.Authentication
                 Console.WriteLine($"Found auth identity {i.Name}");
             }
         }
+        /// <summary>
+        /// Attempt to create an identity from request headers.
+        /// </summary>
+        /// <param name="headers">a name/value collection containing the headers of a request</param>
+        /// <returns></returns>
         public AuthenticationIdentity GetIdentity(NameValueCollection headers)
         {
             foreach(var i in authTypes)
