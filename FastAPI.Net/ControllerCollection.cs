@@ -151,27 +151,37 @@ namespace FastAPI.Net
             var path = request.Request.Url.LocalPath.Trim(' ').Trim('/');
             Console.WriteLine($"Handling request to /{path} ");
             path += "/" + request.Request.HttpMethod.ToLower();
-            if (pathBinder.TryGet(path, out var res))
+            try
             {
-                var args1 = res.Args;
-                foreach (var i in args)
+                if (pathBinder.TryGet(path, out var res))
                 {
-                    args1[i.Key] = args[i.Key];
+                    var args1 = res.Args;
+                    foreach (var i in args)
+                    {
+                        args1[i.Key] = args[i.Key];
 
+                    }
+                    var rets = res.Result.GetArgs(args1);
+                    Controller obj = (Controller)Activator.CreateInstance(res.Result.Controller);
+                    obj.SetData(request.Request, auth, files);
+                    var response = res.Result.Method.Invoke(obj, rets);
+                    SubmitResponse(request, response);
+                    Console.WriteLine($"using {res.Result.Method.Name} in class {res.Result.Controller.Name}");
+                   
                 }
-                var rets = res.Result.GetArgs(args1);
-                Controller obj = (Controller)Activator.CreateInstance(res.Result.Controller);
-                obj.SetData(request.Request, auth, files);
-                var response = res.Result.Method.Invoke(obj, rets);
-                SubmitResponse(request, response);
-                Console.WriteLine($"using {res.Result.Method.Name} in class {res.Result.Controller.Name}");
-                request.Response.OutputStream.Close();
-                request.Response.OutputStream.Dispose();
+                else
+                {
+                    Console.WriteLine($"Unable to handle request");
+                    request.Response.StatusCode = 500;
+                    
+                }
             }
-            else
+            catch (Exception e)
             {
-                Console.WriteLine($"Unable to handle request");
                 request.Response.StatusCode = 500;
+            }
+            finally
+            {
                 request.Response.OutputStream.Close();
                 request.Response.OutputStream.Dispose();
             }
