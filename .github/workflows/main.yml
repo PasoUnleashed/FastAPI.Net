@@ -44,4 +44,5 @@ jobs:
           # NuGet package id, used for version detection & defaults to project name
           PACKAGE_NAME: FastAPI.Net
           VERSION_FILE_PATH: FastAPI.Net/FastAPI.Net.nuspec
+          VERSION_REGEX: ^\s*<version>(.*)<\/version>\s*$
           NUGET_KEY: ${{secrets.nugkey}}
