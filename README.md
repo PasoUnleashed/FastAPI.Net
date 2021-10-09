@@ -1,6 +1,11 @@
 # FastAPI.Net
 FastAPI is a standalone API server library. Has a very simmilliar structure to asp.net mvc api webapp. With very little third party library dependencies.
 
+# Install
+```
+dotnet add package FastAPI.Net --version 1.0.1
+```
+
 # Todo
 * Minimal Access Check
 * Edge cases for parameters
