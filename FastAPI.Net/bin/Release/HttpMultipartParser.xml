@@ -1,0 +1,1305 @@
+<?xml version="1.0"?>
+<doc>
+    <assembly>
+        <name>HttpMultipartParser</name>
+    </assembly>
+    <members>
+        <member name="T:HttpMultipartParser.BinaryStreamStack">
+            <summary>
+                Provides character based and byte based stream-like read operations over multiple
+                streams and provides methods to add data to the front of the buffer.
+            </summary>
+        </member>
+        <member name="F:HttpMultipartParser.BinaryStreamStack.streams">
+            <summary>
+                Holds the streams to read from, the stream on the top of the
+                stack will be read first.
+            </summary>
+        </member>
+        <member name="M:HttpMultipartParser.BinaryStreamStack.#ctor">
+            <summary>
+                Initializes a new instance of the <see cref="T:HttpMultipartParser.BinaryStreamStack" /> class with the default
+                encoding of UTF8.
+            </summary>
+        </member>
+        <member name="M:HttpMultipartParser.BinaryStreamStack.#ctor(System.Text.Encoding)">
+            <summary>
+                Initializes a new instance of the <see cref="T:HttpMultipartParser.BinaryStreamStack" /> class.
+            </summary>
+            <param name="encoding">
+                The encoding to use for character based operations.
+            </param>
+        </member>
+        <member name="P:HttpMultipartParser.BinaryStreamStack.CurrentEncoding">
+            <summary>
+                Gets or sets the current encoding.
+            </summary>
+        </member>
+        <member name="M:HttpMultipartParser.BinaryStreamStack.HasData">
+            <summary>
+                Returns true if there is any data left to read.
+            </summary>
+            <returns>
+                True or false.
+            </returns>
+        </member>
+        <member name="M:HttpMultipartParser.BinaryStreamStack.Peek">
+            <summary>
+                Returns the reader on the top of the stack but does not remove it.
+            </summary>
+            <returns>
+                The <see cref="T:System.IO.BinaryReader" />.
+            </returns>
+        </member>
+        <member name="M:HttpMultipartParser.BinaryStreamStack.Pop">
+            <summary>
+                Returns the reader on the top of the stack and removes it.
+            </summary>
+            <returns>
+                The <see cref="T:System.IO.BinaryReader" />.
+            </returns>
+        </member>
+        <member name="M:HttpMultipartParser.BinaryStreamStack.Push(System.Byte[])">
+            <summary>
+                Pushes data to the front of the stack. The most recently pushed data will
+                be read first.
+            </summary>
+            <param name="data">
+                The data to add to the stack.
+            </param>
+        </member>
+        <member name="M:HttpMultipartParser.BinaryStreamStack.Push(System.Byte[],System.Int32,System.Int32)">
+            <summary>
+                Pushes data to the front of the stack. The most recently pushed data will
+                be read first.
+            </summary>
+            <param name="data">
+                The data to add to the stack.
+            </param>
+            <param name="offset">
+                The zero-based byte offset in buffer at which to begin copying bytes to the current stream.
+            </param>
+            <param name="count">
+                The maximum number of bytes to write.
+            </param>
+        </member>
+        <member name="M:HttpMultipartParser.BinaryStreamStack.Read">
+            <summary>
+                Reads a single byte as an integer from the stack. Returns -1 if no
+                data is left to read.
+            </summary>
+            <returns>
+                The <see cref="T:System.Byte" /> that was read.
+            </returns>
+        </member>
+        <member name="M:HttpMultipartParser.BinaryStreamStack.Read(System.Byte[],System.Int32,System.Int32)">
+            <summary>
+                Reads the specified number of bytes from the stack, starting from a specified point in the byte array.
+            </summary>
+            <param name="buffer">
+                The buffer to read data into.
+            </param>
+            <param name="index">
+                The index of buffer to start reading into.
+            </param>
+            <param name="count">
+                The number of bytes to read into the buffer.
+            </param>
+            <returns>
+                The number of bytes read into buffer. This might be less than the number of bytes requested if that many bytes are not available,
+                or it might be zero if the end of the stream is reached.
+            </returns>
+        </member>
+        <member name="M:HttpMultipartParser.BinaryStreamStack.Read(System.Char[],System.Int32,System.Int32)">
+            <summary>
+                Reads the specified number of characters from the stack, starting from a specified point in the byte array.
+            </summary>
+            <param name="buffer">
+                The buffer to read data into.
+            </param>
+            <param name="index">
+                The index of buffer to start reading into.
+            </param>
+            <param name="count">
+                The number of characters to read into the buffer.
+            </param>
+            <returns>
+                The number of characters read into buffer. This might be less than the number of bytes requested if that many bytes are not available,
+                or it might be zero if the end of the stream is reached.
+            </returns>
+        </member>
+        <member name="M:HttpMultipartParser.BinaryStreamStack.ReadByteLine">
+            <summary>
+                Reads the specified number of characters from the stack, starting from a specified point in the byte array.
+            </summary>
+            <returns>
+                A byte array containing all the data up to but not including the next newline in the stack.
+            </returns>
+        </member>
+        <member name="M:HttpMultipartParser.BinaryStreamStack.ReadByteLine(System.Boolean@)">
+            <summary>
+                Reads a line from the stack delimited by the newline for this platform. The newline
+                characters will not be included in the stream.
+            </summary>
+            <param name="hitStreamEnd">
+                This will be set to true if we did not end on a newline but instead found the end of
+                our data.
+            </param>
+            <returns>
+                The <see cref="T:System.String" /> containing the line.
+            </returns>
+        </member>
+        <member name="M:HttpMultipartParser.BinaryStreamStack.ReadLine">
+            <summary>
+                Reads a line from the stack delimited by the newline for this platform. The newline
+                characters will not be included in the stream.
+            </summary>
+            <returns>
+                The <see cref="T:System.String" /> containing the line.
+            </returns>
+        </member>
+        <member name="M:HttpMultipartParser.BinaryStreamStack.ReadLine(System.Boolean@)">
+            <summary>
+                Reads a line from the stack delimited by the newline for this platform. The newline
+                characters will not be included in the stream.
+            </summary>
+            <param name="hitStreamEnd">
+                This will be set to true if we did not end on a newline but instead found the end of
+                our data.
+            </param>
+            <returns>
+                The <see cref="T:System.String" /> containing the line.
+            </returns>
+        </member>
+        <member name="M:HttpMultipartParser.BinaryStreamStack.NextStream">
+            <summary>
+                Removes the current reader from the stack and ensures it is correctly
+                destroyed and then returns the next available reader. If no reader
+                is available this method returns null.
+            </summary>
+            <returns>
+                The next <see cref="T:System.IO.BinaryReader">reader</see>.
+            </returns>
+        </member>
+        <member name="T:HttpMultipartParser.Extensions">
+            <summary>
+            Class containing various extension methods.
+            </summary>
+        </member>
+        <member name="M:HttpMultipartParser.Extensions.HasParameter(HttpMultipartParser.IMultipartFormDataParser,System.String)">
+            <summary>
+            Returns true if the parameter has any values. False otherwise.
+            </summary>
+            <param name="parser">The multipart form parser.</param>
+            <param name="name">The name of the parameter.</param>
+            <returns>True if the parameter exists. False otherwise.</returns>
+        </member>
+        <member name="M:HttpMultipartParser.Extensions.GetParameterValue(HttpMultipartParser.IMultipartFormDataParser,System.String)">
+             <summary>
+             Returns the value of a parameter or null if it doesn't exist.
+            
+             You should only use this method if you're sure the parameter has only one value.
+            
+             If you need to support multiple values use GetParameterValues.
+             </summary>
+             <param name="parser">The multipart form parser.</param>
+             <param name="name">The name of the parameter.</param>
+             <returns>The value of the parameter.</returns>
+        </member>
+        <member name="M:HttpMultipartParser.Extensions.GetParameterValues(HttpMultipartParser.IMultipartFormDataParser,System.String)">
+            <summary>
+            Returns the values of a parameter or an empty enumerable if the parameter doesn't exist.
+            </summary>
+            <param name="parser">The multipart form parser.</param>
+            <param name="name">The name of the parameter.</param>
+            <returns>The values of the parameter.</returns>
+        </member>
+        <member name="T:HttpMultipartParser.FilePart">
+            <summary>
+                Represents a single file extracted from a multipart/form-data
+                stream.
+            </summary>
+        </member>
+        <member name="M:HttpMultipartParser.FilePart.#ctor(System.String,System.String,System.IO.Stream,System.String,System.String)">
+            <summary>
+                Initializes a new instance of the <see cref="T:HttpMultipartParser.FilePart" /> class.
+            </summary>
+            <param name="name">
+                The name of the input field used for the upload.
+            </param>
+            <param name="fileName">
+                The name of the file.
+            </param>
+            <param name="data">
+                The file data.
+            </param>
+            <param name="contentType">
+                The content type.
+            </param>
+            <param name="contentDisposition">
+                The content disposition.
+            </param>
+        </member>
+        <member name="M:HttpMultipartParser.FilePart.#ctor(System.String,System.String,System.IO.Stream,System.Collections.Generic.IDictionary{System.String,System.String},System.String,System.String)">
+            <summary>
+                Initializes a new instance of the <see cref="T:HttpMultipartParser.FilePart" /> class.
+            </summary>
+            <param name="name">
+                The name of the input field used for the upload.
+            </param>
+            <param name="fileName">
+                The name of the file.
+            </param>
+            <param name="data">
+                The file data.
+            </param>
+            <param name="additionalProperties">
+                Additional properties associated with this file.
+            </param>
+            <param name="contentType">
+                The content type.
+            </param>
+            <param name="contentDisposition">
+                The content disposition.
+            </param>
+        </member>
+        <member name="P:HttpMultipartParser.FilePart.Data">
+            <summary>
+                Gets the data.
+            </summary>
+        </member>
+        <member name="P:HttpMultipartParser.FilePart.FileName">
+            <summary>
+                Gets the file name.
+            </summary>
+        </member>
+        <member name="P:HttpMultipartParser.FilePart.Name">
+            <summary>
+                Gets the name.
+            </summary>
+        </member>
+        <member name="P:HttpMultipartParser.FilePart.ContentType">
+            <summary>
+                Gets the content-type. Defaults to text/plain if unspecified.
+            </summary>
+        </member>
+        <member name="P:HttpMultipartParser.FilePart.ContentDisposition">
+            <summary>
+                Gets the content-disposition. Defaults to form-data if unspecified.
+            </summary>
+        </member>
+        <member name="P:HttpMultipartParser.FilePart.AdditionalProperties">
+            <summary>
+            Gets the additional properties associated with this file.
+            An additional property is any property other than the "well known" ones such as name, filename, content-type, etc.
+            </summary>
+        </member>
+        <member name="T:HttpMultipartParser.IMultipartFormDataParser">
+            <summary>
+                Provides methods to parse a
+                <see href="http://www.ietf.org/rfc/rfc2388.txt">
+                    <c>multipart/form-data</c>
+                </see>
+                stream into it's parameters and file data.
+            </summary>
+        </member>
+        <member name="P:HttpMultipartParser.IMultipartFormDataParser.Files">
+            <summary>
+                Gets the mapping of parameters parsed files. The name of a given field
+                maps to the parsed file data.
+            </summary>
+        </member>
+        <member name="P:HttpMultipartParser.IMultipartFormDataParser.Parameters">
+            <summary>
+                Gets the parameters. Several ParameterParts may share the same name.
+            </summary>
+        </member>
+        <member name="T:HttpMultipartParser.FileStreamDelegate">
+             <summary>
+             The FileStreamDelegate defining functions that can handle file stream data from this parser.
+            
+             Delegates can assume that the data is sequential i.e. the data received by any delegates will be
+             the data immediately following any previously received data.
+             </summary>
+             <param name="name">The name of the multipart data.</param>
+             <param name="fileName">The name of the file.</param>
+             <param name="contentType">The content type of the multipart data.</param>
+             <param name="contentDisposition">The content disposition of the multipart data.</param>
+             <param name="buffer">Some of the data from the file (not necessarily all of the data).</param>
+             <param name="bytes">The length of data in buffer.</param>
+             <param name="partNumber">Each chunk (or "part") in a given file is sequentially numbered, starting at zero.</param>
+             <param name="additionalProperties">Properties other than the "well known" ones (such as name, filename, content-type, etc.) associated with a file stream.</param>
+        </member>
+        <member name="T:HttpMultipartParser.StreamClosedDelegate">
+            <summary>
+            The StreamClosedDelegate defining functions that can handle stream being closed.
+            </summary>
+        </member>
+        <member name="T:HttpMultipartParser.ParameterDelegate">
+            <summary>
+            The ParameterDelegate defining functions that can handle multipart parameter data.
+            </summary>
+            <param name="part">The parsed parameter part.</param>
+        </member>
+        <member name="T:HttpMultipartParser.IStreamingMultipartFormDataParser">
+            <summary>
+                Provides methods to parse a
+                <see href="http://www.ietf.org/rfc/rfc2388.txt">
+                    <c>multipart/form-data</c>
+                </see>
+                stream into it's parameters and file data.
+            </summary>
+        </member>
+        <member name="P:HttpMultipartParser.IStreamingMultipartFormDataParser.FileHandler">
+            <summary>
+            Gets or sets the FileHandler. Delegates attached to this property will receive sequential file stream data from this parser.
+            </summary>
+        </member>
+        <member name="P:HttpMultipartParser.IStreamingMultipartFormDataParser.ParameterHandler">
+            <summary>
+            Gets or sets the ParameterHandler. Delegates attached to this property will receive parameter data.
+            </summary>
+        </member>
+        <member name="P:HttpMultipartParser.IStreamingMultipartFormDataParser.StreamClosedHandler">
+            <summary>
+            Gets or sets the StreamClosedHandler. Delegates attached to this property will be notified when the source stream is exhausted.
+            </summary>
+        </member>
+        <member name="M:HttpMultipartParser.IStreamingMultipartFormDataParser.Run">
+            <summary>
+            Execute the parser. This should be called after all handlers have been set.
+            </summary>
+        </member>
+        <member name="M:HttpMultipartParser.IStreamingMultipartFormDataParser.RunAsync(System.Threading.CancellationToken)">
+            <summary>
+            Execute the parser asynchronously. This should be called after all handlers have been set.
+            </summary>
+            <param name="cancellationToken">The cancellation token.</param>
+            <returns>The asynchronous task.</returns>
+        </member>
+        <member name="T:HttpMultipartParser.MultipartFormDataParser">
+             <summary>
+                 Provides methods to parse a
+                 <see href="http://www.ietf.org/rfc/rfc2388.txt">
+                     <c>multipart/form-data</c>
+                 </see>
+                 stream into it's parameters and file data.
+             </summary>
+             <remarks>
+                 <para>
+                     A parameter is defined as any non-file data passed in the multipart stream. For example
+                     any form fields would be considered a parameter.
+                 </para>
+                 <para>
+                     The parser determines if a section is a file or not based on the presence or absence
+                     of the filename argument for the Content-Type header. If filename is set then the section
+                     is assumed to be a file, otherwise it is assumed to be parameter data.
+                 </para>
+             </remarks>
+             <example>
+                 <code lang="C#">
+                   Stream multipartStream = GetTheMultipartStream();
+                   string boundary = GetTheBoundary();
+                   var parser = new MultipartFormDataParser(multipartStream, boundary, Encoding.UTF8);
+            
+                   // Grab the parameters (non-file data). Key is based on the name field
+                   var username = parser.Parameters["username"].Data;
+                   var password = parser.parameters["password"].Data;
+            
+                   // Grab the first files data
+                   var file = parser.Files.First();
+                   var filename = file.FileName;
+                   var filestream = file.Data;
+               </code>
+                 <code lang="C#">
+                 // In the context of WCF you can get the boundary from the HTTP
+                 // request
+                 public ResponseClass MyMethod(Stream multipartData)
+                 {
+                     // First we need to get the boundary from the header, this is sent
+                     // with the HTTP request. We can do that in WCF using the WebOperationConext:
+                     var type = WebOperationContext.Current.IncomingRequest.Headers["Content-Type"];
+            
+                     // Now we want to strip the boundary out of the Content-Type, currently the string
+                     // looks like: "multipart/form-data; boundary=---------------------124123qase124"
+                     var boundary = type.Substring(type.IndexOf('=')+1);
+            
+                     // Now that we've got the boundary we can parse our multipart and use it as normal
+                     var parser = new MultipartFormDataParser(data, boundary, Encoding.UTF8);
+            
+                     ...
+                 }
+               </code>
+             </example>
+        </member>
+        <member name="F:HttpMultipartParser.MultipartFormDataParser.DefaultBufferSize">
+            <summary>
+                The default buffer size.
+            </summary>
+            <remarks>
+                4096 is the optimal buffer size as it matches the internal buffer of a StreamReader
+                See: http://stackoverflow.com/a/129318/203133
+                See: http://msdn.microsoft.com/en-us/library/9kstw824.aspx (under remarks).
+            </remarks>
+        </member>
+        <member name="M:HttpMultipartParser.MultipartFormDataParser.#ctor">
+            <summary>
+                Initializes a new instance of the <see cref="T:HttpMultipartParser.MultipartFormDataParser"/> class.
+            </summary>
+        </member>
+        <member name="P:HttpMultipartParser.MultipartFormDataParser.Files">
+            <summary>
+                Gets the mapping of parameters parsed files. The name of a given field
+                maps to the parsed file data.
+            </summary>
+        </member>
+        <member name="P:HttpMultipartParser.MultipartFormDataParser.Parameters">
+            <summary>
+                Gets the parameters. Several ParameterParts may share the same name.
+            </summary>
+        </member>
+        <member name="M:HttpMultipartParser.MultipartFormDataParser.Parse(System.IO.Stream,System.Text.Encoding,System.Int32,System.String[])">
+            <summary>
+                Parse the stream into a new instance of the <see cref="T:HttpMultipartParser.MultipartFormDataParser" /> class
+                with the boundary, input encoding and buffer size.
+            </summary>
+            <param name="stream">
+                The stream containing the multipart data.
+            </param>
+            <param name="encoding">
+                The encoding of the multipart data.
+            </param>
+            <param name="binaryBufferSize">
+                The size of the buffer to use for parsing the multipart form data. This must be larger
+                then (size of boundary + 4 + # bytes in newline).
+            </param>
+            <param name="binaryMimeTypes">
+                List of mimetypes that should be detected as file.
+            </param>
+            <returns>
+                A new instance of the <see cref="T:HttpMultipartParser.MultipartFormDataParser"/> class.
+            </returns>
+        </member>
+        <member name="M:HttpMultipartParser.MultipartFormDataParser.Parse(System.IO.Stream,System.String,System.Text.Encoding,System.Int32,System.String[])">
+            <summary>
+                Parse the stream into a new instance of the <see cref="T:HttpMultipartParser.MultipartFormDataParser" /> class
+                with the boundary, input encoding and buffer size.
+            </summary>
+            <param name="stream">
+                The stream containing the multipart data.
+            </param>
+            <param name="boundary">
+                The multipart/form-data boundary. This should be the value
+                returned by the request header.
+            </param>
+            <param name="encoding">
+                The encoding of the multipart data.
+            </param>
+            <param name="binaryBufferSize">
+                The size of the buffer to use for parsing the multipart form data. This must be larger
+                then (size of boundary + 4 + # bytes in newline).
+            </param>
+            <param name="binaryMimeTypes">
+                List of mimetypes that should be detected as file.
+            </param>
+            <returns>
+                A new instance of the <see cref="T:HttpMultipartParser.MultipartFormDataParser"/> class.
+            </returns>
+        </member>
+        <member name="M:HttpMultipartParser.MultipartFormDataParser.ParseAsync(System.IO.Stream,System.Text.Encoding,System.Int32,System.String[])">
+            <summary>
+                Asynchronously parse the stream into a new instance of the <see cref="T:HttpMultipartParser.MultipartFormDataParser" /> class
+                with the boundary, input encoding and buffer size.
+            </summary>
+            <param name="stream">
+                The stream containing the multipart data.
+            </param>
+            <param name="encoding">
+                The encoding of the multipart data.
+            </param>
+            <param name="binaryBufferSize">
+                The size of the buffer to use for parsing the multipart form data. This must be larger
+                then (size of boundary + 4 + # bytes in newline).
+            </param>
+            <param name="binaryMimeTypes">
+                List of mimetypes that should be detected as file.
+            </param>
+            <returns>
+                A new instance of the <see cref="T:HttpMultipartParser.MultipartFormDataParser"/> class.
+            </returns>
+        </member>
+        <member name="M:HttpMultipartParser.MultipartFormDataParser.ParseAsync(System.IO.Stream,System.String,System.Text.Encoding,System.Int32,System.String[])">
+            <summary>
+                Asynchronously parse the stream into a new instance of the <see cref="T:HttpMultipartParser.MultipartFormDataParser" /> class
+                with the boundary, input encoding and buffer size.
+            </summary>
+            <param name="stream">
+                The stream containing the multipart data.
+            </param>
+            <param name="boundary">
+                The multipart/form-data boundary. This should be the value
+                returned by the request header.
+            </param>
+            <param name="encoding">
+                The encoding of the multipart data.
+            </param>
+            <param name="binaryBufferSize">
+                The size of the buffer to use for parsing the multipart form data. This must be larger
+                then (size of boundary + 4 + # bytes in newline).
+            </param>
+            <param name="binaryMimeTypes">
+                List of mimetypes that should be detected as file.
+            </param>
+            <returns>
+                A new instance of the <see cref="T:HttpMultipartParser.MultipartFormDataParser"/> class.
+            </returns>
+        </member>
+        <member name="M:HttpMultipartParser.MultipartFormDataParser.ParseStream(System.IO.Stream,System.String,System.Text.Encoding,System.Int32,System.String[])">
+            <summary>
+                Parse the stream with the boundary, input encoding and buffer size.
+            </summary>
+            <param name="stream">
+                The stream containing the multipart data.
+            </param>
+            <param name="boundary">
+                The multipart/form-data boundary. This should be the value
+                returned by the request header.
+            </param>
+            <param name="encoding">
+                The encoding of the multipart data.
+            </param>
+            <param name="binaryBufferSize">
+                The size of the buffer to use for parsing the multipart form data. This must be larger
+                then (size of boundary + 4 + # bytes in newline).
+            </param>
+            <param name="binaryMimeTypes">
+                List of mimetypes that should be detected as file.
+            </param>
+        </member>
+        <member name="M:HttpMultipartParser.MultipartFormDataParser.ParseStreamAsync(System.IO.Stream,System.String,System.Text.Encoding,System.Int32,System.String[])">
+            <summary>
+                Parse the stream with the boundary, input encoding and buffer size.
+            </summary>
+            <param name="stream">
+                The stream containing the multipart data.
+            </param>
+            <param name="boundary">
+                The multipart/form-data boundary. This should be the value
+                returned by the request header.
+            </param>
+            <param name="encoding">
+                The encoding of the multipart data.
+            </param>
+            <param name="binaryBufferSize">
+                The size of the buffer to use for parsing the multipart form data. This must be larger
+                then (size of boundary + 4 + # bytes in newline).
+            </param>
+            <param name="binaryMimeTypes">
+                List of mimetypes that should be detected as file.
+            </param>
+        </member>
+        <member name="T:HttpMultipartParser.MultipartParseException">
+            <summary>
+                Represents a parsing problem occurring within the MultipartFormDataParser.
+            </summary>
+        </member>
+        <member name="M:HttpMultipartParser.MultipartParseException.#ctor(System.String)">
+            <summary>
+                Initializes a new instance of the <see cref="T:HttpMultipartParser.MultipartParseException" /> class.
+            </summary>
+            <param name="message">
+                The message.
+            </param>
+        </member>
+        <member name="T:HttpMultipartParser.ParameterPart">
+            <summary>
+                Represents a single parameter extracted from a multipart/form-data
+                stream.
+            </summary>
+            <remarks>
+                For our purposes a "parameter" is defined as any non-file data
+                in the multipart/form-data stream.
+            </remarks>
+        </member>
+        <member name="M:HttpMultipartParser.ParameterPart.#ctor(System.String,System.String)">
+            <summary>
+                Initializes a new instance of the <see cref="T:HttpMultipartParser.ParameterPart" /> class.
+            </summary>
+            <param name="name">
+                The name.
+            </param>
+            <param name="data">
+                The data.
+            </param>
+        </member>
+        <member name="P:HttpMultipartParser.ParameterPart.Data">
+            <summary>
+                Gets the data.
+            </summary>
+        </member>
+        <member name="P:HttpMultipartParser.ParameterPart.Name">
+            <summary>
+                Gets the name.
+            </summary>
+        </member>
+        <member name="T:HttpMultipartParser.RebufferableBinaryReader">
+            <summary>
+                Provides methods to interpret and read a stream as either character or binary
+                data similar to a <see cref="T:System.IO.BinaryReader" /> and provides the ability to push
+                data onto the front of the stream.
+            </summary>
+        </member>
+        <member name="F:HttpMultipartParser.RebufferableBinaryReader.bufferSize">
+            <summary>
+                The size of the buffer to use when reading new data.
+            </summary>
+        </member>
+        <member name="F:HttpMultipartParser.RebufferableBinaryReader.encoding">
+            <summary>
+                The encoding to use for character based operations.
+            </summary>
+        </member>
+        <member name="F:HttpMultipartParser.RebufferableBinaryReader.stream">
+            <summary>
+                The stream to read raw data from.
+            </summary>
+        </member>
+        <member name="F:HttpMultipartParser.RebufferableBinaryReader.streamStack">
+            <summary>
+                The stream stack to store buffered data.
+            </summary>
+        </member>
+        <member name="M:HttpMultipartParser.RebufferableBinaryReader.#ctor(System.IO.Stream)">
+            <summary>
+                Initializes a new instance of the <see cref="T:HttpMultipartParser.RebufferableBinaryReader" /> class.
+                Default encoding of UTF8 will be used.
+            </summary>
+            <param name="input">
+                The input stream to read from.
+            </param>
+        </member>
+        <member name="M:HttpMultipartParser.RebufferableBinaryReader.#ctor(System.IO.Stream,System.Text.Encoding,System.Int32)">
+            <summary>
+                Initializes a new instance of the <see cref="T:HttpMultipartParser.RebufferableBinaryReader" /> class.
+            </summary>
+            <param name="input">
+                The input stream to read from.
+            </param>
+            <param name="encoding">
+                The encoding to use for character based operations.
+            </param>
+            <param name="bufferSize">
+                The buffer size to use for new buffers.
+            </param>
+        </member>
+        <member name="M:HttpMultipartParser.RebufferableBinaryReader.Buffer(System.Byte[])">
+            <summary>
+                Adds data to the front of the stream. The most recently buffered data will
+                be read first.
+            </summary>
+            <param name="data">
+                The data to buffer.
+            </param>
+        </member>
+        <member name="M:HttpMultipartParser.RebufferableBinaryReader.Buffer(System.Byte[],System.Int32,System.Int32)">
+            <summary>
+                Adds data to the front of the stream. The most recently buffered data will
+                be read first.
+            </summary>
+            <param name="data">
+                The data to buffer.
+            </param>
+            <param name="offset">
+                The zero-based byte offset in buffer at which to begin copying bytes to the current stream.
+            </param>
+            <param name="count">
+                The maximum number of bytes to write.
+            </param>
+        </member>
+        <member name="M:HttpMultipartParser.RebufferableBinaryReader.Buffer(System.String)">
+            <summary>
+                Adds the string to the front of the stream. The most recently buffered data will
+                be read first.
+            </summary>
+            <param name="data">
+                The data.
+            </param>
+        </member>
+        <member name="M:HttpMultipartParser.RebufferableBinaryReader.Read">
+            <summary>
+                Reads a single byte as an integer from the stream. Returns -1 if no
+                data is left to read.
+            </summary>
+            <returns>
+                The <see cref="T:System.Byte" /> that was read.
+            </returns>
+        </member>
+        <member name="M:HttpMultipartParser.RebufferableBinaryReader.Read(System.Byte[],System.Int32,System.Int32)">
+            <summary>
+                Reads the specified number of bytes from the stream, starting from a
+                specified point in the byte array.
+            </summary>
+            <param name="buffer">
+                The buffer to read data into.
+            </param>
+            <param name="index">
+                The index of buffer to start reading into.
+            </param>
+            <param name="count">
+                The number of bytes to read into the buffer.
+            </param>
+            <returns>
+                The number of bytes read into buffer. This might be less than the number of bytes requested if that many bytes are not available,
+                or it might be zero if the end of the stream is reached.
+            </returns>
+        </member>
+        <member name="M:HttpMultipartParser.RebufferableBinaryReader.Read(System.Char[],System.Int32,System.Int32)">
+            <summary>
+                Reads the specified number of characters from the stream, starting from a
+                specified point in the byte array.
+            </summary>
+            <param name="buffer">
+                The buffer to read data into.
+            </param>
+            <param name="index">
+                The index of buffer to start reading into.
+            </param>
+            <param name="count">
+                The number of characters to read into the buffer.
+            </param>
+            <returns>
+                The number of characters read into buffer. This might be less than the number of
+                characters requested if that many characters are not available,
+                or it might be zero if the end of the stream is reached.
+            </returns>
+        </member>
+        <member name="M:HttpMultipartParser.RebufferableBinaryReader.ReadByteLine">
+            <summary>
+                Reads a series of bytes delimited by the byte encoding of newline for this platform.
+                The newline bytes will not be included in the return data.
+            </summary>
+            <returns>
+                A byte array containing all the data up to but not including the next newline in the stack.
+            </returns>
+        </member>
+        <member name="M:HttpMultipartParser.RebufferableBinaryReader.ReadLine">
+            <summary>
+                Reads a line from the stack delimited by the newline for this platform. The newline
+                characters will not be included in the stream.
+            </summary>
+            <returns>
+                The <see cref="T:System.String" /> containing the line or null if end of stream.
+            </returns>
+        </member>
+        <member name="M:HttpMultipartParser.RebufferableBinaryReader.ReadAsync(System.Threading.CancellationToken)">
+            <summary>
+                Asynchronously reads a single byte as an integer from the stream.
+                Returns -1 if no data is left to read.
+            </summary>
+            <param name="cancellationToken">
+                The cancellation token.
+            </param>
+            <returns>
+                The <see cref="T:System.Byte" /> that was read.
+            </returns>
+        </member>
+        <member name="M:HttpMultipartParser.RebufferableBinaryReader.ReadAsync(System.Byte[],System.Int32,System.Int32,System.Threading.CancellationToken)">
+            <summary>
+                Asynchronously reads the specified number of bytes from the stream, starting from a
+                specified point in the byte array.
+            </summary>
+            <param name="buffer">
+                The buffer to read data into.
+            </param>
+            <param name="index">
+                The index of buffer to start reading into.
+            </param>
+            <param name="count">
+                The number of bytes to read into the buffer.
+            </param>
+            <param name="cancellationToken">
+                The cancellation token.
+            </param>
+            <returns>
+                The number of bytes read into buffer. This might be less than the number of bytes requested if that many bytes are not available,
+                or it might be zero if the end of the stream is reached.
+            </returns>
+        </member>
+        <member name="M:HttpMultipartParser.RebufferableBinaryReader.ReadAsync(System.Char[],System.Int32,System.Int32,System.Threading.CancellationToken)">
+            <summary>
+                Asynchronously reads the specified number of characters from the stream, starting from a
+                specified point in the byte array.
+            </summary>
+            <param name="buffer">
+                The buffer to read data into.
+            </param>
+            <param name="index">
+                The index of buffer to start reading into.
+            </param>
+            <param name="count">
+                The number of characters to read into the buffer.
+            </param>
+            <param name="cancellationToken">
+                The cancellation token.
+            </param>
+            <returns>
+                The number of characters read into buffer. This might be less than the number of
+                characters requested if that many characters are not available,
+                or it might be zero if the end of the stream is reached.
+            </returns>
+        </member>
+        <member name="M:HttpMultipartParser.RebufferableBinaryReader.ReadByteLineAsync(System.Threading.CancellationToken)">
+            <summary>
+                Asynchronously reads a series of bytes delimited by the byte encoding of newline for this platform.
+                The newline bytes will not be included in the return data.
+            </summary>
+            <param name="cancellationToken">
+                The cancellation token.
+            </param>
+            <returns>
+                A byte array containing all the data up to but not including the next newline in the stack.
+            </returns>
+        </member>
+        <member name="M:HttpMultipartParser.RebufferableBinaryReader.ReadLineAsync(System.Threading.CancellationToken)">
+            <summary>
+                Asynchronously reads a line from the stack delimited by the newline for this platform. The newline
+                characters will not be included in the stream.
+            </summary>
+            <param name="cancellationToken">
+                The cancellation token.
+            </param>
+            <returns>
+                The <see cref="T:System.String" /> containing the line or null if end of stream.
+            </returns>
+        </member>
+        <member name="M:HttpMultipartParser.RebufferableBinaryReader.GetBomOffset(System.Byte[])">
+            <summary>
+                Determines the byte order marking offset (if any) from the
+                given buffer.
+            </summary>
+            <param name="buffer">
+                The buffer to examine.
+            </param>
+            <returns>
+                The <see cref="T:System.Int32" /> representing the length of the byte order marking.
+            </returns>
+        </member>
+        <member name="M:HttpMultipartParser.RebufferableBinaryReader.StreamData">
+            <summary>
+                Reads more data from the stream into the stream stack.
+            </summary>
+            <returns>
+                The number of bytes read into the stream stack as an <see cref="T:System.Int32" />.
+            </returns>
+        </member>
+        <member name="M:HttpMultipartParser.RebufferableBinaryReader.StreamDataAsync(System.Threading.CancellationToken)">
+            <summary>
+                Asynchronously reads more data from the stream into the stream stack.
+            </summary>
+            <param name="cancellationToken">
+                The cancellation token.
+            </param>
+            <returns>
+                The number of bytes read into the stream stack as an <see cref="T:System.Int32" />.
+            </returns>
+        </member>
+        <member name="M:HttpMultipartParser.RebufferableBinaryReader.PushToStack(System.Byte[],System.Int32)">
+            <summary>
+                Push the data read from the stram into the stream stack.
+            </summary>
+            <param name="buffer">
+                The data that was read from the stream.
+            </param>
+            <param name="amountRead">
+                The number of bytes read from the stream.
+            </param>
+        </member>
+        <member name="T:HttpMultipartParser.StreamingMultipartFormDataParser">
+             <summary>
+                 Provides methods to parse a
+                 <see href="http://www.ietf.org/rfc/rfc2388.txt">
+                     <c>multipart/form-data</c>
+                 </see>
+                 stream into it's parameters and file data.
+             </summary>
+             <remarks>
+                 <para>
+                     A parameter is defined as any non-file data passed in the multipart stream. For example
+                     any form fields would be considered a parameter.
+                 </para>
+                 <para>
+                     The parser determines if a section is a file or not based on the presence or absence
+                     of the filename argument for the Content-Type header. If filename is set then the section
+                     is assumed to be a file, otherwise it is assumed to be parameter data.
+                 </para>
+             </remarks>
+             <example>
+                 <code lang="C#">
+                   Stream multipartStream = GetTheMultipartStream();
+                   string boundary = GetTheBoundary();
+                   var parser = new StreamingMultipartFormDataParser(multipartStream, boundary, Encoding.UTF8);
+            
+                   // Set up our delegates for how we want to handle recieved data.
+                   // In our case parameters will be written to a dictionary and files
+                   // will be written to a filestream
+                   parser.ParameterHandler += parameter => AddToDictionary(parameter);
+                   parser.FileHandler += (name, fileName, type, disposition, buffer, bytes) => WriteDataToFile(fileName, buffer, bytes);
+                   parser.Run();
+               </code>
+             </example>
+        </member>
+        <member name="F:HttpMultipartParser.StreamingMultipartFormDataParser.DefaultBufferSize">
+            <summary>
+                The default buffer size.
+            </summary>
+            <remarks>
+                4096 is the optimal buffer size as it matches the internal buffer of a StreamReader
+                See: http://stackoverflow.com/a/129318/203133
+                See: http://msdn.microsoft.com/en-us/library/9kstw824.aspx (under remarks).
+            </remarks>
+        </member>
+        <member name="F:HttpMultipartParser.StreamingMultipartFormDataParser.binaryMimeTypes">
+            <summary>
+                List of mimetypes that should be detected as file.
+            </summary>
+        </member>
+        <member name="F:HttpMultipartParser.StreamingMultipartFormDataParser.stream">
+            <summary>
+                The stream we are parsing.
+            </summary>
+        </member>
+        <member name="F:HttpMultipartParser.StreamingMultipartFormDataParser.boundary">
+            <summary>
+                The boundary of the multipart message  as a string.
+            </summary>
+        </member>
+        <member name="F:HttpMultipartParser.StreamingMultipartFormDataParser.boundaryBinary">
+            <summary>
+                The boundary of the multipart message as a byte string
+                encoded with CurrentEncoding.
+            </summary>
+        </member>
+        <member name="F:HttpMultipartParser.StreamingMultipartFormDataParser.endBoundary">
+            <summary>
+                The end boundary of the multipart message as a string.
+            </summary>
+        </member>
+        <member name="F:HttpMultipartParser.StreamingMultipartFormDataParser.endBoundaryBinary">
+            <summary>
+                The end boundary of the multipart message as a byte string
+                encoded with CurrentEncoding.
+            </summary>
+        </member>
+        <member name="F:HttpMultipartParser.StreamingMultipartFormDataParser.readEndBoundary">
+            <summary>
+                Determines if we have consumed the end boundary binary and determines
+                if we are done parsing.
+            </summary>
+        </member>
+        <member name="M:HttpMultipartParser.StreamingMultipartFormDataParser.#ctor(System.IO.Stream,System.Text.Encoding,System.Int32,System.String[])">
+            <summary>
+                Initializes a new instance of the <see cref="T:HttpMultipartParser.StreamingMultipartFormDataParser" /> class
+                with the boundary, stream, input encoding and buffer size.
+            </summary>
+            <param name="stream">
+                The stream containing the multipart data.
+            </param>
+            <param name="encoding">
+                The encoding of the multipart data.
+            </param>
+            <param name="binaryBufferSize">
+                The size of the buffer to use for parsing the multipart form data. This must be larger
+                then (size of boundary + 4 + # bytes in newline).
+            </param>
+            <param name="binaryMimeTypes">
+                List of mimetypes that should be detected as file.
+            </param>
+        </member>
+        <member name="M:HttpMultipartParser.StreamingMultipartFormDataParser.#ctor(System.IO.Stream,System.String,System.Text.Encoding,System.Int32,System.String[])">
+            <summary>
+                Initializes a new instance of the <see cref="T:HttpMultipartParser.StreamingMultipartFormDataParser" /> class
+                with the boundary, stream, input encoding and buffer size.
+            </summary>
+            <param name="stream">
+                The stream containing the multipart data.
+            </param>
+            <param name="boundary">
+                The multipart/form-data boundary. This should be the value
+                returned by the request header.
+            </param>
+            <param name="encoding">
+                The encoding of the multipart data.
+            </param>
+            <param name="binaryBufferSize">
+                The size of the buffer to use for parsing the multipart form data. This must be larger
+                then (size of boundary + 4 + # bytes in newline).
+            </param>
+            <param name="binaryMimeTypes">
+                List of mimetypes that should be detected as file.
+            </param>
+        </member>
+        <member name="M:HttpMultipartParser.StreamingMultipartFormDataParser.Run">
+            <summary>
+                Begins executing the parser. This should be called after all handlers have been set.
+            </summary>
+        </member>
+        <member name="M:HttpMultipartParser.StreamingMultipartFormDataParser.RunAsync(System.Threading.CancellationToken)">
+            <summary>
+                Begins executing the parser asynchronously. This should be called after all handlers have been set.
+            </summary>
+            <param name="cancellationToken">
+                The cancellation token.
+            </param>
+            <returns>
+                The asynchronous task.
+            </returns>
+        </member>
+        <member name="P:HttpMultipartParser.StreamingMultipartFormDataParser.BinaryBufferSize">
+            <summary>
+            Gets the binary buffer size.
+            </summary>
+        </member>
+        <member name="P:HttpMultipartParser.StreamingMultipartFormDataParser.Encoding">
+            <summary>
+            Gets the encoding.
+            </summary>
+        </member>
+        <member name="P:HttpMultipartParser.StreamingMultipartFormDataParser.FileHandler">
+            <summary>
+            Gets or sets the FileHandler. Delegates attached to this property will receive sequential file stream data from this parser.
+            </summary>
+        </member>
+        <member name="P:HttpMultipartParser.StreamingMultipartFormDataParser.ParameterHandler">
+            <summary>
+            Gets or sets the ParameterHandler. Delegates attached to this property will receive parameter data.
+            </summary>
+        </member>
+        <member name="P:HttpMultipartParser.StreamingMultipartFormDataParser.StreamClosedHandler">
+            <summary>
+            Gets or sets the StreamClosedHandler. Delegates attached to this property will be notified when the source stream is exhausted.
+            </summary>
+        </member>
+        <member name="M:HttpMultipartParser.StreamingMultipartFormDataParser.DetectBoundary(HttpMultipartParser.RebufferableBinaryReader)">
+            <summary>
+                Detects the boundary from the input stream. Assumes that the
+                current position of the reader is the start of the file and therefore
+                the beginning of the boundary.
+            </summary>
+            <param name="reader">
+                The binary reader to parse.
+            </param>
+            <returns>
+                The boundary string.
+            </returns>
+        </member>
+        <member name="M:HttpMultipartParser.StreamingMultipartFormDataParser.DetectBoundaryAsync(HttpMultipartParser.RebufferableBinaryReader,System.Threading.CancellationToken)">
+            <summary>
+                Detects the boundary from the input stream. Assumes that the
+                current position of the reader is the start of the file and therefore
+                the beginning of the boundary.
+            </summary>
+            <param name="reader">
+                The binary reader to parse.
+            </param>
+            <param name="cancellationToken">
+                The cancellation token.
+            </param>
+            <returns>
+                The boundary string.
+            </returns>
+        </member>
+        <member name="M:HttpMultipartParser.StreamingMultipartFormDataParser.IsFilePart(System.Collections.Generic.IDictionary{System.String,System.String})">
+            <summary>
+            Use a few assumptions to determine if a section contains a file or a "data" parameter.
+            </summary>
+            <param name="parameters">The section parameters.</param>
+            <returns>true if the section contains a file, false otherwise.</returns>
+        </member>
+        <member name="M:HttpMultipartParser.StreamingMultipartFormDataParser.FindNextNewline(System.Byte[]@,System.Int32,System.Int32)">
+            <summary>
+                Finds the next sequence of newlines in the input stream.
+            </summary>
+            <param name="data">The data to search.</param>
+            <param name="offset">The offset to start searching at.</param>
+            <param name="maxBytes">The maximum number of bytes (starting from offset) to search.</param>
+            <returns>The offset of the next newline.</returns>
+        </member>
+        <member name="M:HttpMultipartParser.StreamingMultipartFormDataParser.CalculateNewlineLength(System.Byte[]@,System.Int32)">
+            <summary>
+                Calculates the length of the next found newline.
+                data[offset] is the start of the space to search.
+            </summary>
+            <param name="data">
+                The data containing the newline.
+            </param>
+            <param name="offset">
+                The offset of the start of the newline.
+            </param>
+            <returns>
+                The length in bytes of the newline sequence.
+            </returns>
+        </member>
+        <member name="M:HttpMultipartParser.StreamingMultipartFormDataParser.Parse(HttpMultipartParser.RebufferableBinaryReader)">
+            <summary>
+                Begins the parsing of the stream into objects.
+            </summary>
+            <param name="reader">
+                The multipart/form-data binary reader to parse from.
+            </param>
+            <exception cref="T:HttpMultipartParser.MultipartParseException">
+                thrown on finding unexpected data such as a boundary before we are ready for one.
+            </exception>
+        </member>
+        <member name="M:HttpMultipartParser.StreamingMultipartFormDataParser.ParseAsync(HttpMultipartParser.RebufferableBinaryReader,System.Threading.CancellationToken)">
+            <summary>
+                Begins the asynchronous parsing of the stream into objects.
+            </summary>
+            <param name="reader">
+                The multipart/form-data binary reader to parse from.
+            </param>
+            <param name="cancellationToken">
+                The cancellation token.
+            </param>
+            <returns>
+                The asynchronous task.
+            </returns>
+            <exception cref="T:HttpMultipartParser.MultipartParseException">
+                thrown on finding unexpected data such as a boundary before we are ready for one.
+            </exception>
+        </member>
+        <member name="M:HttpMultipartParser.StreamingMultipartFormDataParser.ParseFilePart(System.Collections.Generic.Dictionary{System.String,System.String},HttpMultipartParser.RebufferableBinaryReader)">
+            <summary>
+                Parses a section of the stream that is known to be file data.
+            </summary>
+            <param name="parameters">
+                The header parameters of this file.
+            </param>
+            <param name="reader">
+                The StreamReader to read the data from.
+            </param>
+        </member>
+        <member name="M:HttpMultipartParser.StreamingMultipartFormDataParser.ParseFilePartAsync(System.Collections.Generic.Dictionary{System.String,System.String},HttpMultipartParser.RebufferableBinaryReader,System.Threading.CancellationToken)">
+            <summary>
+                Asynchronously parses a section of the stream that is known to be file data.
+            </summary>
+            <param name="parameters">
+                The header parameters of this file, expects "name" and "filename" to be valid keys.
+            </param>
+            <param name="reader">
+                The StreamReader to read the data from.
+            </param>
+            <param name="cancellationToken">
+                The cancellation token.
+            </param>
+            <returns>
+                The asynchronous task.
+            </returns>
+        </member>
+        <member name="M:HttpMultipartParser.StreamingMultipartFormDataParser.ParseParameterPart(System.Collections.Generic.Dictionary{System.String,System.String},HttpMultipartParser.RebufferableBinaryReader)">
+            <summary>
+                Parses a section of the stream that is known to be parameter data.
+            </summary>
+            <param name="parameters">
+                The header parameters of this section. "name" must be a valid key.
+            </param>
+            <param name="reader">
+                The StreamReader to read the data from.
+            </param>
+            <exception cref="T:HttpMultipartParser.MultipartParseException">
+                thrown if unexpected data is found such as running out of stream before hitting the boundary.
+            </exception>
+        </member>
+        <member name="M:HttpMultipartParser.StreamingMultipartFormDataParser.ParseParameterPartAsync(System.Collections.Generic.Dictionary{System.String,System.String},HttpMultipartParser.RebufferableBinaryReader,System.Threading.CancellationToken)">
+            <summary>
+                Asynchronously parses a section of the stream that is known to be parameter data.
+            </summary>
+            <param name="parameters">
+                The header parameters of this section. "name" must be a valid key.
+            </param>
+            <param name="reader">
+                The StreamReader to read the data from.
+            </param>
+            <param name="cancellationToken">
+                The cancellation token.
+            </param>
+            <returns>
+                The asynchronous task.
+            </returns>
+            <exception cref="T:HttpMultipartParser.MultipartParseException">
+                thrown if unexpected data is found such as running out of stream before hitting the boundary.
+            </exception>
+        </member>
+        <member name="M:HttpMultipartParser.StreamingMultipartFormDataParser.ParseSection(HttpMultipartParser.RebufferableBinaryReader)">
+            <summary>
+                Parses the header of the next section of the multipart stream and
+                determines if it contains file data or parameter data.
+            </summary>
+            <param name="reader">
+                The StreamReader to read data from.
+            </param>
+            <exception cref="T:HttpMultipartParser.MultipartParseException">
+                thrown if unexpected data is hit such as end of stream.
+            </exception>
+        </member>
+        <member name="M:HttpMultipartParser.StreamingMultipartFormDataParser.ParseSectionAsync(HttpMultipartParser.RebufferableBinaryReader,System.Threading.CancellationToken)">
+            <summary>
+                Asynchronously parses the header of the next section of the multipart stream and
+                determines if it contains file data or parameter data.
+            </summary>
+            <param name="reader">
+                The StreamReader to read data from.
+            </param>
+            <param name="cancellationToken">
+                The cancellation token.
+            </param>
+            <returns>
+                The asynchronous task.
+            </returns>
+            <exception cref="T:HttpMultipartParser.MultipartParseException">
+                thrown if unexpected data is hit such as end of stream.
+            </exception>
+        </member>
+        <member name="M:HttpMultipartParser.StreamingMultipartFormDataParser.SplitBySemicolonIgnoringSemicolonsInQuotes(System.String)">
+            <summary>
+                Splits a line by semicolons but ignores semicolons in quotes.
+            </summary>
+            <param name="line">The line to split.</param>
+            <returns>The split strings.</returns>
+        </member>
+        <member name="M:HttpMultipartParser.StreamingMultipartFormDataParser.GetAdditionalParameters(System.Collections.Generic.IDictionary{System.String,System.String})">
+            <summary>
+            Check if there are parameters other than the "well known" parameters associated with this file.
+            This is quite rare but, as an example, the Alexa service includes a "content-ID" parameter with each file.
+            </summary>
+            <returns>A dictionary of parameters.</returns>
+        </member>
+        <member name="T:HttpMultipartParser.SubsequenceFinder">
+            <summary>
+                Provides methods to find a subsequence within a
+                sequence.
+            </summary>
+        </member>
+        <member name="M:HttpMultipartParser.SubsequenceFinder.Search(System.Byte[],System.Byte[])">
+            <summary>
+                Finds if a sequence exists within another sequence.
+            </summary>
+            <param name="haystack">
+                The sequence to search.
+            </param>
+            <param name="needle">
+                The sequence to look for.
+            </param>
+            <returns>
+                The start position of the found sequence or -1 if nothing was found.
+            </returns>
+        </member>
+        <member name="M:HttpMultipartParser.SubsequenceFinder.Search(System.Byte[],System.Byte[],System.Int32)">
+            <summary>Finds if a sequence exists within another sequence.</summary>
+            <param name="haystack">The sequence to search.</param>
+            <param name="needle">The sequence to look for.</param>
+            <param name="haystackLength">The length of the haystack to consider for searching.</param>
+            <returns>The start position of the found sequence or -1 if nothing was found.</returns>
+            <remarks>Inspired by https://stackoverflow.com/a/39021296/153084 .</remarks>
+        </member>
+    </members>
+</doc>

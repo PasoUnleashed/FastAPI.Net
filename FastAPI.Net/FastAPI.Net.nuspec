@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="utf-8"?>
+<package >
+  <metadata>
+    <id>$id$</id>
+    <version>1.0.1</version>
+    <title>$title$</title>
+    <authors>Faisal Alsajjan</authors>
+    <requireLicenseAcceptance>false</requireLicenseAcceptance>
+    <license type="expression">MIT</license>
+    <projectUrl>https://github.com/PasoUnleashed/FastAPI.Net</projectUrl>
+    <description>A standalone RESTful API app library</description>
+    <releaseNotes>First Release.</releaseNotes>
+    <copyright>MIT Liscence</copyright>
+    <tags>API REST HTTP SERVER</tags>
+  </metadata>
+</package>
