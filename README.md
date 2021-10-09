@@ -3,7 +3,7 @@ FastAPI is a standalone API server library. Has a very simmilliar structure to a
 
 # Install
 ```
-dotnet add package FastAPI.Net --version 1.0.2
+dotnet add package FastAPI.Net --version 1.0.3
 ```
 
 # Todo
