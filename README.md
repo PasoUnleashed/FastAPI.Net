@@ -1,6 +1,10 @@
 # FastAPI.Net
 FastAPI is a standalone API server library. Has a very simmilliar structure to asp.net mvc api webapp. With very little third party library dependencies.
 
+# Todo
+* Minimal Access Check
+* Edge cases for parameters
+* ResponseObject with status code/message
 
 # Example
 ```c#
@@ -77,3 +81,5 @@ public class Person
 }
 
 ```
+
+
