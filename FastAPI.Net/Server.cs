@@ -8,26 +8,30 @@ using System.Net.Http;
 using System.Net;
 using System.Collections.Concurrent;
 using System.Threading;
+using FastAPI.Net.Authentication;
 
 namespace FastAPI.Net
 {
     /// <summary>
     /// Api Server. Automatically finds controllers and authentication types
     /// </summary>
-    public class API : IDisposable
+    public class Server : IDisposable
     {
         System.Net.HttpListener listener;
-        APIConfig config;
+        ServerConfig config;
         ConcurrentQueue<HttpListenerContext> contextQueue = new ConcurrentQueue<HttpListenerContext>();
-        ControllerCollection controllers;
+        APIHandler apiHandler;
         Thread listenThread;
         Thread processorThread;
         Authentication.AuthenticationIdentityFactory authFact;
         bool started;
         public bool Running { get => started && listenThread.IsAlive && processorThread.IsAlive; }
-        public API(APIConfig config, string host, int port)
+        public ServerConfig Config { get => config;  }
+
+        public Server(ServerConfig config, string host, int port)
         {
-            controllers = new ControllerCollection(AppDomain.CurrentDomain);
+            this.config = config;
+            apiHandler = new APIHandler(this,AppDomain.CurrentDomain);
             listener = new System.Net.HttpListener();
             authFact = new Authentication.AuthenticationIdentityFactory(AppDomain.CurrentDomain);
             listener.Prefixes.Add((config.Https ? "https://" : "http://") + host +$":{port}/");
@@ -71,9 +75,30 @@ namespace FastAPI.Net
             {
                 if (contextQueue.TryDequeue(out var x))
                 {
-                    var args = BodyParser.ParseArgs(x.Request);
+                   
                     Authentication.AuthenticationIdentity auth = authFact.GetIdentity(x.Request.Headers);
-                    controllers.HandleRequest(x,auth,args.StringParameters,args.FileParameters);
+                    try
+                    {
+                        if (!apiHandler.TryHandle(x, auth))
+                        {
+                            x.Response.StatusCode = 404;
+                            using (System.IO.StreamWriter w = new System.IO.StreamWriter(x.Response.OutputStream))
+                            {
+                                w.WriteLine("Resource not found!");
+                            }
+                            Console.WriteLine($"404: Resource not found @{x.Request.Url}");
+                        }
+                        
+                    }catch(Exception e)
+                    {
+                        x.Response.StatusCode = 500;
+                        Console.WriteLine(e.InnerException);
+                    }
+                    finally
+                    {
+                        x.Response.OutputStream.Close();
+                        x.Response.OutputStream.Dispose();
+                    }
                         
                 }
             }
@@ -92,7 +117,9 @@ namespace FastAPI.Net
 
         }
 
-        ~API()
+        
+
+        ~Server()
         {
             Dispose();
         }

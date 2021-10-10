@@ -186,6 +186,9 @@ namespace FastAPI.Net
 
         }
         private static Random random = new Random();
+
+
+
         /// <summary>
         /// Name of the file in parameter
         /// </summary>
@@ -209,6 +212,16 @@ namespace FastAPI.Net
             return new string(Enumerable.Repeat(chars, length)
               .Select(s => s[random.Next(s.Length)]).ToArray());
         }
+
+        /// <summary>
+        /// Get the complete file in binary form.
+        /// </summary>
+        /// <returns>the file in binary</returns>
+        public byte[] GetData()
+        {
+            return File.ReadAllBytes(Path);
+        }
+
         /// <summary>
         /// Save the file
         /// </summary>
@@ -238,13 +251,6 @@ namespace FastAPI.Net
                 Console.WriteLine("file deleted");
             }
         }
-        /// <summary>
-        /// Get the complete file in binary form.
-        /// </summary>
-        /// <returns>the file in binary</returns>
-        public byte[] GetData()
-        {
-            return File.ReadAllBytes(Path);
-        }
+        
     }
 }

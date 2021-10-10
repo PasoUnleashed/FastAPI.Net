@@ -291,7 +291,6 @@ namespace FastAPI.Net.PathParsing {
         /// </summary>
         class StaticTreeNode : PathTreeNode
         {
-            string name;
 
             public StaticTreeNode(string val) : base(val)
             {

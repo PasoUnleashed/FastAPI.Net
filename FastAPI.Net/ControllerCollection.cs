@@ -10,6 +10,7 @@ using System.Threading.Tasks;
 
 namespace FastAPI.Net
 {
+   
     public class ControllerCollection
     {
         List<Type> controllers;
@@ -142,88 +143,16 @@ namespace FastAPI.Net
                 }
             }
         }
-        /// <summary>
-        /// Handle an incoming request using the controllers registered
-        /// </summary>
-        /// <param name="request"></param>
-        public void HandleRequest(HttpListenerContext request, Authentication.AuthenticationIdentity auth, Dictionary<string, string> args, IEnumerable<FileParameter> files)
+        public bool TryGetHandler(HttpListenerContext context,out PathParsing.PathBinder<HandlerInfo>.PathBindingResult handler)
         {
-            var path = request.Request.Url.LocalPath.Trim(' ').Trim('/');
-            Console.WriteLine($"Handling request to /{path} ");
-            path += "/" + request.Request.HttpMethod.ToLower();
-            try
-            {
-                if (pathBinder.TryGet(path, out var res))
-                {
-                    var args1 = res.Args;
-                    foreach (var i in args)
-                    {
-                        args1[i.Key] = args[i.Key];
+            var path = context.Request.Url.LocalPath.Trim(' ').Trim('/');
 
-                    }
-                    var rets = res.Result.GetArgs(args1);
-                    Controller obj = (Controller)Activator.CreateInstance(res.Result.Controller);
-                    obj.SetData(request.Request, auth, files);
-                    var response = res.Result.Method.Invoke(obj, rets);
-                    SubmitResponse(request, response);
-                    Console.WriteLine($"using {res.Result.Method.Name} in class {res.Result.Controller.Name}");
-                   
-                }
-                else
-                {
-                    Console.WriteLine($"Unable to handle request");
-                    request.Response.StatusCode = 500;
-                    
-                }
-            }
-            catch (Exception e)
-            {
-                request.Response.StatusCode = 500;
-            }
-            finally
-            {
-                request.Response.OutputStream.Close();
-                request.Response.OutputStream.Dispose();
-            }
+            path += "/" + context.Request.HttpMethod.ToLower();
+            return pathBinder.TryGet(path, out handler);
         }
-        /// <summary>
-        /// Submit a response returned by a handler
-        /// </summary>
-        /// <param name="context">the context to respond to</param>
-        /// <param name="res">the response of the handler</param>
-        void SubmitResponse(HttpListenerContext context, object res)
-        {
-            string responseText = "";
-            if (res != null)
-            {
-                if (res is string s || res.GetType().IsValueType)
-                {
-
-                    responseText = res.ToString();
-                }
-                else if (!res.GetType().IsValueType)
-                {
-                    try
-                    {
-                        responseText = JsonNet.Serialize(res);
-                    }
-                    catch (Exception e)
-                    {
-                        responseText = "unable to serialize";
-                    }
-                }
-                if (responseText != "")
-                {
-                    using (System.IO.StreamWriter r = new System.IO.StreamWriter(context.Response.OutputStream))
-                    {
-                        r.Write(responseText);
-                    }
-                }
-            }
-            context.Response.OutputStream.Close();
-            context.Response.OutputStream.Dispose();
-
-        }
+        
+        
+        
     }
    
 }
