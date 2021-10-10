@@ -3,13 +3,15 @@ FastAPI is a standalone API server library. Has a very simmilliar structure to a
 
 # Install
 ```
-dotnet add package FastAPI.Net --version 1.0.3
+dotnet add package FastAPI.Net --version 1.0.4
 ```
 
 # Todo
 * Minimal Access Check
 * Edge cases for parameters
 * ResponseObject with status code/message
+* Debugging and Logging
+* Accounting
 
 # Example
 ```c#
