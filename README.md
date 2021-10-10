@@ -9,7 +9,7 @@ dotnet add package FastAPI.Net --version 1.0.4
 # Todo
 * Minimal Access Check
 * Edge cases for parameters
-* ResponseObject with status code/message
+* ~~ResponseObject with status code/message~~
 * Debugging and Logging
 * Accounting
 
