@@ -20,9 +20,9 @@ class Program
     static void Main(string[] args)
     {
         // Create configuration
-        var config = new APIConfig().UseHttps(false);             
+        var config = new ServerConfig().UseHttps(false).VerboseExceptions(true);             
         // Create server
-        var api = new API(config, "localhost", 8080);
+        var api = new Server(config, "localhost", 8080);
         // Start the server
         api.Start();
         // Rest of the appliaction.
@@ -44,8 +44,8 @@ public class Controller1:Controller
             Console.WriteLine("No Identity");
         }
     }
-    [HttpPut] //http://localhost:8080/api/AddPerson
-    [Route("./AddPerson")]
+    [HttpPut] //http://localhost:8080/api/AddPerson/1
+    [Route("./AddPerson/")]
     public void AddPerson(Person p)
     {
         Console.WriteLine($"Adding person with id {p.ID}");
@@ -56,8 +56,29 @@ public class Controller1:Controller
         Console.WriteLine($"Returning person with id {id}");
         return new Person(id, "somePerson", DateTime.Now);
     }
+    static Random r = new Random();
+    [HttpGet]
+    [Route("./response")]
+    public HttpResponse Random()
+    {
+        var rg = r.NextDouble();
+        if (rg> 0.666)
+        {
+            throw new Exception("unhandled error");
+        }else if (rg > 0.333)
+        {
+            return HttpResponse.CreateError(500, new Exception("internal error"));
+        }
+        else
+        {
+            return HttpResponse.CreateSuccess("Success");
+        }
+        
+    }
 }
-/// Our authentication identity class
+/// <summary>
+/// Our authentication class
+/// </summary>
 public class Auth : FastAPI.Net.Authentication.AuthenticationIdentity
 {
     // The identity will be created if the request header contains the constructor's parameters.
@@ -69,21 +90,6 @@ public class Auth : FastAPI.Net.Authentication.AuthenticationIdentity
     public override bool HasMinimalAccess()
     {
         return true;
-    }
-}
-
-// Testing data class
-public class Person
-{
-    public int ID { get; set; }
-    public string Name { get; set; }
-    public DateTime Birthday { get; set; }
-    public Person() { }
-    public Person(int id,string name,DateTime birthday)
-    {
-        this.ID = id;
-        Birthday = birthday;
-        Name = name;
     }
 }
 
