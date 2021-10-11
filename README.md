@@ -2,7 +2,7 @@
 FastAPI is a standalone API server library. Has a very simmilliar structure to asp.net mvc api webapp. With very little third party library dependencies.
 
 # Install
-![Nuget](https://img.shields.io/nuget/v/FastAPI.Net)
+[![Nuget](https://img.shields.io/nuget/v/FastAPI.Net)](https://www.nuget.org/packages/FastAPI.Net/)
 
 # Todo
 * Minimal Access Check
