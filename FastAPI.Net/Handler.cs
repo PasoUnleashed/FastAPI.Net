@@ -81,10 +81,17 @@ namespace FastAPI.Net
         }
         public override bool TryHandle(HttpListenerContext context, AuthenticationIdentity identity)
         {
+            
             if (collection.TryGetHandler(context, out var res))
             {
                 Console.WriteLine($"Handling request to {context.Request.Url.ToString().Trim().Trim('\n')} using {res.Result.Method.Name} in class {res.Result.Controller.Name}");
                 var args = res.Args;
+                foreach(var i in args.ToArray())
+                {
+                    
+                    args[i.Key.Trim('}').Trim('{')] = i.Value;
+                    args.Remove(i.Key);
+                }
                 var bodyArgs = BodyParser.ParseArgs(context.Request);
                 foreach (var i in bodyArgs.StringParameters)
                 {

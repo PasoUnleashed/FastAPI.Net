@@ -2,13 +2,14 @@
 
   <PropertyGroup>
     <TargetFramework>netstandard2.1</TargetFramework>
-    <Version>1.2.0</Version>
+    <Version>1.3</Version>
     <Authors>Faisal Alsajjan</Authors>
     <Description>FastAPI.Net Allows developers to define and create standalone APIs quickly for low load applications.</Description>
     <PackageProjectUrl>https://github.com/PasoUnleashed/FastAPI.Net</PackageProjectUrl>
     <RepositoryUrl>https://github.com/PasoUnleashed/FastAPI.Net</RepositoryUrl>
     <RepositoryType>Github</RepositoryType>
     <PackageTags>API REST Server Http mvc</PackageTags>
+    <PackageReleaseNotes>bug fixes</PackageReleaseNotes>
   </PropertyGroup>
 
   <ItemGroup>
