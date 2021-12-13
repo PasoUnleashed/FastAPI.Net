@@ -16,6 +16,9 @@ namespace FastAPI.Net
         {
             this.server = server;
         }
+
+        protected Server Server { get => server;  }
+
         public abstract bool TryHandle(HttpListenerContext context, AuthenticationIdentity identity);
 
         /// <summary>
@@ -102,11 +105,60 @@ namespace FastAPI.Net
                 obj.SetData(context.Request, identity, bodyArgs.FileParameters);
                 try
                 {
-                    var response = res.Result.Method.Invoke(obj, rets);
-                    SubmitResponse(context, response);
+                    
+                    var methodAttributes = System.Attribute.GetCustomAttributes(res.Result.Method).Where((i)=>i is PermissionAtrribute);
+                    bool passedRAuth = false, passedWAuth = false;
+                    if (methodAttributes.Count() > 0 && identity != null)
+                    {
+
+                        var level = identity.Level;
+
+                        foreach (var i in methodAttributes)
+                        {
+                            if (i is ReadAttribute r && level.ReadLevel >= r.Level)
+                            {
+
+                                passedRAuth = true;
+
+                            }
+                            else if (i is WriteAttribute w && level.WriteLevel >= w.Level)
+                            {
+                                passedWAuth = true;
+                            }
+                        }
+                        if (!passedRAuth)
+                        {
+                            passedRAuth = !methodAttributes.Any((i) => i is ReadAttribute);
+
+                        }
+                        if (!passedWAuth)
+                        {
+                            passedWAuth = !methodAttributes.Any((i) => i is WriteAttribute);
+                        }
+
+                    }
+                    else
+                    {
+                        passedRAuth = true;
+                        passedWAuth = true;
+                    }
+                    if (passedWAuth && passedRAuth)
+                    {
+                        var response = res.Result.Method.Invoke(obj, rets);
+                        SubmitResponse(context, response);
+                    }
+                    else
+                    {
+                        SubmitResponse(context, HttpResponse.CreateError(403,"Unauthorized access level"));
+                    }
                 }
                 catch(Exception e)
                 {
+                    if (this.Server.Config.SendExceptions)
+                    {
+                        
+                    }
+                    Console.WriteLine(e);
                     SubmitResponse(context, HttpResponse.CreateError(500, e.InnerException));
                 }
                 return true;

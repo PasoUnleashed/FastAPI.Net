@@ -7,7 +7,41 @@ using System.Threading.Tasks;
 
 namespace FastAPI.Net.Authentication
 {
-    
+    public class AuthenticationLevel
+    {
+        int readLevel, writeLevel;
+        public AuthenticationLevel(int r,int w)
+        {
+            this.readLevel = r;
+            this.writeLevel = w;
+        }
+        public int ReadLevel { get => readLevel; }
+        public int WriteLevel { get => writeLevel; }
+    }
+    [AttributeUsage(AttributeTargets.Method)]
+    public abstract class PermissionAtrribute : System.Attribute
+    {
+        int level;
+        public PermissionAtrribute(int level)
+        {
+            this.level = level;
+        }
+
+        public int Level { get => level; }
+    }
+
+    public class ReadAttribute : PermissionAtrribute
+    {
+        public ReadAttribute(int level) : base(level)
+        {
+        }
+    }
+    public class WriteAttribute : PermissionAtrribute
+    {
+        public WriteAttribute(int level) : base(level)
+        {
+        }
+    }
     /// <summary>
     /// An authentication identity. When implemented will be filled and associated with the request and present in the controller when the handler is called for any checks to be performed
     /// </summary>
@@ -16,7 +50,7 @@ namespace FastAPI.Net.Authentication
     /// </remarks>
     /// <example>
     /// 
-    /// public class USernameAndPassword:AuthenticationIdentity{
+    /// public class UsernameAndPassword:AuthenticationIdentity{
     ///     bool isAuth;
     ///     public UsernameAndPassword(string username,string password){
     ///         //do auth
@@ -24,12 +58,27 @@ namespace FastAPI.Net.Authentication
     ///     public bool HasMinimalAccess(){
     ///         return isAuth;
     ///     }
+    ///     public void GetLevel(){
+    ///         return database.levelOf(username);
+    ///     }
     /// }
     /// </example>
     public abstract class AuthenticationIdentity
     {
+        AuthenticationLevel level;
+
+        public AuthenticationLevel Level { get => level;  }
+
+        public AuthenticationIdentity()
+        {
+            
+        }
         public abstract bool HasMinimalAccess();
-                                                                                                                                                                                                                                        
+        public abstract AuthenticationLevel DetermineAccessLevel();   
+        internal void SetLevel(AuthenticationLevel level)
+        {
+            this.level = level;
+        }
     }
 
 
@@ -78,7 +127,10 @@ namespace FastAPI.Net.Authentication
                             vals[p] = headers[param[p].Name];
                         }
                         Console.WriteLine("Found auth");
-                        return (AuthenticationIdentity)j.Invoke(vals);
+                        var identity= (AuthenticationIdentity)j.Invoke(vals);
+                        identity.SetLevel(identity.DetermineAccessLevel());
+                        Console.WriteLine($"Level: w: {identity.Level.WriteLevel} r: {identity.Level.ReadLevel}");
+                        return identity;
                     }
                 }
             }

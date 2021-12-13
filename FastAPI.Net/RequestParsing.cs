@@ -228,7 +228,7 @@ namespace FastAPI.Net
         /// <param name="path"></param>
         public void Save(string path)
         {
-
+            // check for viruses
             System.IO.File.Move(this.path, path);
             this.path = path;
             saved = true;

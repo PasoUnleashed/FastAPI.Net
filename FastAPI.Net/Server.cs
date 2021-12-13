@@ -92,6 +92,7 @@ namespace FastAPI.Net
                     }catch(Exception e)
                     {
                         x.Response.StatusCode = 500;
+                        Console.WriteLine(e);
                         Console.WriteLine(e.InnerException);
                     }
                     finally
