@@ -98,14 +98,13 @@ namespace FastAPI.Net.Authentication
         {
             this.domain = domain;
             this.authTypes = new List<Type>();
-            Console.WriteLine("Initializing auth factory");
             foreach (var i in domain.GetAssemblies())
             {
                 authTypes = authTypes.Concat(i.GetTypes().Where((j) => typeof(Authentication.AuthenticationIdentity).IsAssignableFrom(j)&&!j.IsAbstract)).ToList();
             }
             foreach(var i in authTypes)
             {
-                Console.WriteLine($"Found auth identity {i.Name}");
+                Logger.Log($"Found auth identity definition {i.Name}");
             }
         }
         /// <summary>
@@ -126,10 +125,10 @@ namespace FastAPI.Net.Authentication
                         {
                             vals[p] = headers[param[p].Name];
                         }
-                        Console.WriteLine("Found auth");
+                       
                         var identity= (AuthenticationIdentity)j.Invoke(vals);
                         identity.SetLevel(identity.DetermineAccessLevel());
-                        Console.WriteLine($"Level: w: {identity.Level.WriteLevel} r: {identity.Level.ReadLevel}");
+                        Logger.Log($"Authenticated user with level: w: {identity.Level.WriteLevel} r: {identity.Level.ReadLevel}");
                         return identity;
                     }
                 }

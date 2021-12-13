@@ -87,7 +87,8 @@ namespace FastAPI.Net
             
             if (collection.TryGetHandler(context, out var res))
             {
-                Console.WriteLine($"Handling request to {context.Request.Url.ToString().Trim().Trim('\n')} using {res.Result.Method.Name} in class {res.Result.Controller.Name}");
+               
+                Logger.Log($"Handling request to {context.Request.Url.ToString().Trim().Trim('\n')} using {res.Result.Method.Name} in class {res.Result.Controller.Name}");
                 var args = res.Args;
                 foreach(var i in args.ToArray())
                 {
@@ -149,6 +150,7 @@ namespace FastAPI.Net
                     }
                     else
                     {
+                        Logger.Warning($"Unauthorized Request from {context.Request.RemoteEndPoint} passed read:{passedRAuth} passed write:{passedWAuth}");
                         SubmitResponse(context, HttpResponse.CreateError(403,"Unauthorized access level"));
                     }
                 }
@@ -158,7 +160,7 @@ namespace FastAPI.Net
                     {
                         
                     }
-                    Console.WriteLine(e);
+                    Logger.Error(e);
                     SubmitResponse(context, HttpResponse.CreateError(500, e.InnerException));
                 }
                 return true;

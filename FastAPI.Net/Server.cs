@@ -35,6 +35,7 @@ namespace FastAPI.Net
             listener = new System.Net.HttpListener();
             authFact = new Authentication.AuthenticationIdentityFactory(AppDomain.CurrentDomain);
             listener.Prefixes.Add((config.Https ? "https://" : "http://") + host +$":{port}/");
+            Logger.Log($"Started listening at {host}:{port}");
             listenThread = new Thread(ListenLoop);
             processorThread = new Thread(ProcessorLoop);
             
@@ -86,19 +87,23 @@ namespace FastAPI.Net
                             {
                                 w.WriteLine("Resource not found!");
                             }
-                            Console.WriteLine($"404: Resource not found @{x.Request.Url}");
+                            Logger.Log($"REQUEST FROM {x.Request.RemoteEndPoint} 404: Resource not found @{x.Request.Url}");
                         }
                         
                     }catch(Exception e)
                     {
                         x.Response.StatusCode = 500;
-                        Console.WriteLine(e);
-                        Console.WriteLine(e.InnerException);
+                        Logger.Log($"ERROR OCCURED IN REQUEST FROM USER {x.Request.RemoteEndPoint} resulted in error");
+                        Logger.Error(e);
                     }
                     finally
                     {
-                        x.Response.OutputStream.Close();
-                        x.Response.OutputStream.Dispose();
+                        try
+                        {
+                            x.Response.OutputStream.Close();
+                            x.Response.OutputStream.Dispose();
+                        }
+                        catch { }
                     }
                         
                 }
